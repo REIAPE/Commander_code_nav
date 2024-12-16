@@ -1,0 +1,80 @@
+---
+Apartment: Asuinhuoneisto 8
+ApartmentSquare: {
+    rectangle_center : [0.4,0.9],
+    width: 1,
+    height: 0.4,
+    angle: 0 }
+
+...
+---
+Apartment: Varasto
+ApartmentSquare: {
+    rectangle_center : [-2.7,0.9],
+    width: 1,
+    height: 0.4,
+    angle: 0 }
+...
+---
+Apartment: Asuinhuoneisto 7
+ApartmentSquare: {
+    rectangle_center : [0.4,-1.6],
+    width: 1,
+    height: 0.4,
+    angle: 180}
+...
+---
+Apartment: Asuinhuoneisto 6
+ApartmentSquare: {
+    rectangle_center : [-2.5,-1.6],
+    width: 1,
+    height: 0.4,
+    angle: 180}
+...
+---
+Apartment: Asuinhuoneisto 5
+ApartmentSquare: {
+    rectangle_center : [-8,3],
+    width: 1,
+    height: 0.4,
+    angle: 60}
+...
+---
+Apartment: Asuinhuoneisto 10
+ApartmentSquare: {
+    rectangle_center : [5.4,0.8],
+    width: 1,
+    height: 0.4,
+    angle: 0}
+...
+---
+Apartment: Asuinhuoneisto 12
+ApartmentSquare: {
+    rectangle_center : [8.1,0.8],
+    width: 1,
+    height: 0.4,
+    angle: 0}
+...
+---
+Apartment: Asuinhuoneisto 11
+ApartmentSquare: {
+    rectangle_center : [8.1,-1.6],
+    width: 1,
+    height: 0.4,
+    angle: 180}
+...
+---
+Apartment: Asuinhuoneisto 9
+ApartmentSquare: {
+    rectangle_center : [5.4,-1.6],
+    width: 1,
+    height: 0.4,
+    angle: 180}
+...
+---
+Apartment: Siivouskomero
+ApartmentSquare: {
+    rectangle_center : [-6.5,4.4],
+    width: 1,
+    height: 0.4,
+    angle: 180}
