@@ -42,7 +42,7 @@ class SimplePubSub(Node):
         for result in results:
             # get the classes names
             classes_names = result.names
-            self.save_data(classes_names)
+            
             # iterate over each box
             for box in result.boxes:
                 # check if confidence is greater than 60 percent
@@ -66,6 +66,7 @@ class SimplePubSub(Node):
 
                     # put the class name and confidence on the image
                     cv2.putText(frame, f'{class_name} {box.conf[0]:.2f}', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, colour, 2)
+                    self.save_data(class_name)
         return frame
 
     def odom_callback(self, msg):
@@ -75,6 +76,7 @@ class SimplePubSub(Node):
         )
     
     def check_aparment(self):
+    
         point = self.pose
         
         info = f"Location is {self.drone_location},\n"
@@ -94,8 +96,10 @@ class SimplePubSub(Node):
         return info
     
     def save_data(self, names):
+        #Save object and location to dict. So we can add location data for object.
         if self.check_aparment() not in self.data_dict:
-            self.data_dict[self.check_aparment] = names
+            if names not in self.data_dict[self.drone_location]:
+                self.data_dict[self.drone_location] = names
 
     def getColours(cls_num):
         base_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
@@ -120,12 +124,19 @@ def main(args=None):
     rclpy.init(args=args)
     simple_pub_sub = SimplePubSub()
     SimplePubSub.drone_location = "Hallway"
-    rclpy.spin(simple_pub_sub)
-
-    print(simple_pub_sub.data_dict)
-    simple_pub_sub.destroy_node()
-    rclpy.shutdown()
-
+    try:
+        rclpy.spin(simple_pub_sub)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # Print the final state of data_dict
+        print()
+        print(simple_pub_sub.data_dict)
+        
+        # Clean up resources
+        simple_pub_sub.destroy_node()
+        
   
 if __name__ == '__main__':
   main()
+  print("Node shutdown cleanly")
