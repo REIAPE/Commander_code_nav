@@ -4,6 +4,7 @@ from nav_msgs.msg import Odometry
 import yaml
 from yaml.loader import SafeLoader
 from math_code import *
+from std_msgs.msg import String
 
 class OdometrySubscriber(Node):
     def __init__(self):
@@ -14,19 +15,28 @@ class OdometrySubscriber(Node):
             self.odom_callback,
             10  # QoS profile depth
         )
+
+        self.publisher = self.create_publisher(
+            String,
+            'drone_location',  # Replace with the name of your output topic
+            10  # QoS depth
+        )
+        self.get_logger().info('StringRelayNode has been started.')
         self.subscription  # prevent unused variable warning
-        with open('yaml_files/apartment_data.yaml', 'r') as f:
+        self.publisher
+
+        with open('/home/ap/commander/construction_inspection/src/yaml_files/apartment_data.yaml', 'r') as f:
             self.yaml_data = list(yaml.load_all(f, Loader=SafeLoader))
 
+
     def odom_callback(self, msg):
-        print("starting location printing")
         self.pose = (
             msg.pose.pose.position.x,
             msg.pose.pose.position.y
         )
-        
-        self.check_aparment()
-
+        location = String()
+        location.data = self.check_aparment()
+        self.publisher.publish(location)
       
     def check_aparment(self):
         point = self.pose
@@ -45,13 +55,13 @@ class OdometrySubscriber(Node):
                 if is_point_inside_rotated_rectangle(point, house_center, width, height/3, angle): self.drone_location = Apartment
                 if is_point_inside_rotated_rectangle(point, hallway_center, width, height/3, angle): self.drone_location = "Hallway"
 
-            else: self.get_logger().info(info)
-
+        return info
     
     
     
 
 def main(args=None):
+    print("Publishing location as apartments")
     rclpy.init(args=args)
     odometry_subscriber = OdometrySubscriber()
     odometry_subscriber.drone_location = "Hallway"

@@ -5,8 +5,12 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2 
-
 from ultralytics import YOLO
+
+from nav_msgs.msg import Odometry
+import yaml
+from yaml.loader import SafeLoader
+from math_code import *
     
 class SimplePubSub(Node):
     def __init__(self):
@@ -24,17 +28,25 @@ class SimplePubSub(Node):
         self.subscription 
         self.br = CvBridge()
 
+        self.odomsubscription = self.create_subscription(Odometry,'odom', self.odom_callback,10 )
+        self.odomsubscription  
+
+        self.data_dict = {}
+
+        with open('/home/ap/commander/construction_inspection/src/yaml_files/apartment_data.yaml', 'r') as f:
+            self.yaml_data = list(yaml.load_all(f, Loader=SafeLoader))
+
     def detection_callback(self, frame):
         results = self.yolo.track(frame, stream=True)
 
         for result in results:
             # get the classes names
             classes_names = result.names
-
+            self.save_data(classes_names)
             # iterate over each box
             for box in result.boxes:
-                # check if confidence is greater than 40 percent
-                if box.conf[0] > 0.4:
+                # check if confidence is greater than 60 percent
+                if box.conf[0] > 0.6:
                     # get coordinates
                     [x1, y1, x2, y2] = box.xyxy[0]
                     # convert to int
@@ -56,6 +68,35 @@ class SimplePubSub(Node):
                     cv2.putText(frame, f'{class_name} {box.conf[0]:.2f}', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, colour, 2)
         return frame
 
+    def odom_callback(self, msg):
+        self.pose = (
+            msg.pose.pose.position.x,
+            msg.pose.pose.position.y
+        )
+    
+    def check_aparment(self):
+        point = self.pose
+        
+        info = f"Location is {self.drone_location},\n"
+        for i in self.yaml_data:
+            Apartment = i["Apartment"]
+            
+            rectangle_center = (i["ApartmentSquare"]["rectangle_center"][0],i["ApartmentSquare"]["rectangle_center"][1])
+            width = i["ApartmentSquare"]["width"]
+            height = i["ApartmentSquare"]["height"]
+            angle = i["ApartmentSquare"]["angle"]
+            if is_point_inside_rotated_rectangle(point, rectangle_center, width, height, angle):
+                house_center = rotate_vector_around_point((rectangle_center[0],rectangle_center[1]+round(height/3,2)),rectangle_center,angle)
+                hallway_center = rotate_vector_around_point((rectangle_center[0],rectangle_center[1]-round(height/3,2)),rectangle_center,angle)
+                if is_point_inside_rotated_rectangle(point, house_center, width, height/3, angle): self.drone_location = Apartment
+                if is_point_inside_rotated_rectangle(point, hallway_center, width, height/3, angle): self.drone_location = "Hallway"
+
+        return info
+    
+    def save_data(self, names):
+        if self.check_aparment() not in self.data_dict:
+            self.data_dict[self.check_aparment] = names
+
     def getColours(cls_num):
         base_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
 
@@ -75,11 +116,13 @@ class SimplePubSub(Node):
         cv2.imshow("camera", current_frame)   
         cv2.waitKey(1)
 
-
 def main(args=None):
     rclpy.init(args=args)
     simple_pub_sub = SimplePubSub()
+    SimplePubSub.drone_location = "Hallway"
     rclpy.spin(simple_pub_sub)
+
+    print(simple_pub_sub.data_dict)
     simple_pub_sub.destroy_node()
     rclpy.shutdown()
 
