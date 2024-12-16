@@ -1,9 +1,9 @@
 ---
 # Apartment points for robot to navigate. First is at the door and last is at the door.
 Apartment: Asuinhuoneisto 5
-points: {first_point: [-8,5.3,3.14],
+points: {first_point: [-8.2,3,3.14],
       point1: [-11,4,1.57],
-      last_point: [-8,5.3,0]
+      last_point: [-8.2,3,0]
       }
 ...
 ---
@@ -52,7 +52,7 @@ points: {first_point: [8.1,-2,-1.57],
 Apartment: Asuinhuoneisto 12
 points: {first_point: [8.1,1.1,1.57],
       point1: [9,4,0],
-      last_point: [8.1,1.1,1.57]
+      last_point: [8.1,1.1,-1.57]
       }
 ...
 ---
@@ -65,7 +65,7 @@ points: {first_point: [5.4,1,1.57],
 ---
 Apartment: Asuinhuoneisto 8
 points: {first_point: [0.4,1.1,1.57],
-      point1: [4,1,0],
+      point1: [1,4,0],
       last_point: [0.4,1.1,-1.57]
       }
 

@@ -9,6 +9,6 @@ def read_yaml_file_for_points():
     for i in yaml_data:
         pointlist = []
         for y in i["points"]:
-            pointlist.append((i["points"][y][0],i["points"][y][1],i["points"][y][2]))
+            pointlist.append((float(i["points"][y][0]),float(i["points"][y][1]),float(i["points"][y][2])))
         Apartments[i["Apartment"]] = pointlist
     return Apartments
