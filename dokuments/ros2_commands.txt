@@ -1,0 +1,30 @@
+#check path = pwd
+
+#view model = ros2 launch urdf_tutorial display.launch.py model:= <model>
+		#ros2 launch urdf_tutorial display.launch.py model:=/home/ap/SLAM_WS/src/test_bot/description/robot.urdf.xacro
+
+#copy files = cp -R <source path> <to path or name>
+
+#move robot = ros2 run turtlebot3_teleop teleop_keyboard 
+
+
+<------HOW SLAM WORKS WITH NAV2 AND ROS2 ------>
+
+IF YOU HAVE A MAP
+	ros2 launch test_bot launch_custom_robot.launch.py 
+	ros2 launch nav2_bringup localization_launch.py use_sim_time:=True map:=maps/apartments2.yaml
+	ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true map_subscribe_transient_local:=true
+	ros2 run rviz2 rviz2 -d rviz_conf/Rviz_env.rviz 
+
+	
+IF YOU DONT HAVE A MAP (YOU NEED TO MAKE ONE)
+	ros2 launch test_bot launch_custom_robot.launch.py 
+	ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true
+	ros2 launch slam_toolbox online_async_launch.py params_file:=./SLAM_WS/src/test_bot/config/mapper_params_online_async.yaml use_sim_time:=true
+	ros2 run rviz2 rviz2 -d rviz_conf/Rviz_env.rviz 
+	
+	ros2 run nav2_map_server map_saver_cli -f maps/<map name> #save when mapped
+
+
+
+
