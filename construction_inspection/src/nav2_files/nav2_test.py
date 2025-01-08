@@ -5,9 +5,10 @@ from nav2_simple_commander.robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
-from read_yaml import *
+from camera_files.read_yaml import *
 
 def apartments_circulation_order():
+    #Tell robot order of apartments to circulate
     apartments = ['Asuinhuoneisto 5', 'Siivouskomero', 
                   'Varasto','Asuinhuoneisto 6',
                   'Asuinhuoneisto 8','Asuinhuoneisto 7',
@@ -36,7 +37,6 @@ def main():
     nav = BasicNavigator()
     apartment_points = read_yaml_file_for_points()
     # --- Set initial pose ---
-    # !!! Comment if the initial pose is already set !!!
     initial_pose = create_pose_stamped(nav, 0.0, 0.0, 0.0)
     nav.setInitialPose(initial_pose)
 

@@ -58,3 +58,21 @@ def rotate_vector_around_point(vector, pivot, angle_degrees):
     final_y = rotated_y + py
     
     return final_x, final_y
+
+def is_point_inside_rectangle(point, rect_start, rect_end):
+    """
+    Checks if a point is inside a rectangle.
+
+    :param point: A tuple (x, y) representing the point's coordinates.
+    :param rect_start: A tuple (x1, y1) representing the top-left corner of the rectangle.
+    :param rect_end: A tuple (x2, y2) representing the bottom-right corner of the rectangle.
+    :return: True if the point is inside the rectangle, False otherwise.
+    """
+    x, y = point
+
+    # Ensure rect_start is the top-left and rect_end is the bottom-right
+    x1, y1 = min(rect_start[0], rect_end[0]), min(rect_start[1], rect_end[1])
+    x2, y2 = max(rect_start[0], rect_end[0]), max(rect_start[1], rect_end[1])
+
+    # Check if the point lies within the bounds
+    return x1 <= x <= x2 and y1 <= y <= y2
