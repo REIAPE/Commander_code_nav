@@ -1,8 +1,9 @@
 """
 This file opens ros map as pgm image. You draw rectangles to give apartment cordinates.
 """
-
+import os
 import sys
+
 import cv2
 import yaml
 
@@ -12,7 +13,6 @@ rect_start = None
 rect_end = None
 drawing = False
 rectangles = []
-path = "/home/ap/robot_controller/dokuments/maps/"
 
 
 def check_correct_start():
@@ -20,8 +20,8 @@ def check_correct_start():
         print("error: you must give a file")
         sys.exit(1)
 
-def read_yaml(filename):
-    path_to_file = path + filename
+def read_yaml(filepath):
+    path_to_file = filepath
     with open(path_to_file, 'r') as f:
         data = yaml.full_load(f)
     image_data = {
@@ -34,12 +34,13 @@ def read_yaml(filename):
     return image_data
 
 def write_cordinates(resolution,origin):
-    f = open("cordinates.txt", "w")
-    for line in rectangles:
-        cor1 = (line[1][0]*resolution + origin[0], line[1][1]*resolution + origin[1])
-        cor2 = (line[2][0]*resolution + origin[0], line[2][1]*resolution + origin[1])
-        f.write(f'{line[0]} {cor1} {cor2} \n')
-    f.close()
+    if len(rectangles) != 0:
+        f = open("/home/ap/robot_controller/construction_inspection/src/nav2_files/map/cordinates.txt", "w")
+        for line in rectangles:
+            cor1 = (round(line[1][0]*resolution + origin[0],2), round(line[1][1]*resolution + origin[1],2))
+            cor2 = (round(line[2][0]*resolution + origin[0],2), round(line[2][1]*resolution + origin[1],2))
+            f.write(f'{line[0]} {cor1} {cor2} \n')
+        f.close()
 
 def draw_rectangle(event, x, y, flags, param):
     global rect_start, rect_end, drawing
@@ -78,6 +79,7 @@ def confirm_rectangle(start, end):
 def open_image(imagepath):
 
     image = cv2.imread(imagepath)
+    
     print(f'Found image at : {imagepath}')
     print(f'image shape: {image.shape}. Press q to quit')
     if image is None:
@@ -88,10 +90,10 @@ def open_image(imagepath):
 
 def main():
     global rect_start, rect_end
-    filename = sys.argv[1]
-    image_data = read_yaml(filename)
-
-    imagepath = path + image_data['image_name']
+    filepath = sys.argv[1]
+    image_data = read_yaml(filepath)
+    folder_path = os.path.dirname(filepath)
+    imagepath = folder_path + "/" + image_data['image_name']
     image = open_image(imagepath)
 
     clone = image.copy()
@@ -103,12 +105,12 @@ def main():
 
         # Draw rectangle dynamically if in drawing mode
         if rect_start and rect_end and drawing:
-            cv2.rectangle(img, rect_start, rect_end, (255,0,0), 2)
+            cv2.rectangle(img, rect_start, rect_end, (255,0,0), 1)
 
         # Draw finalized rectangles with names
         for rect in rectangles:
             name, start, end = rect
-            cv2.rectangle(img, start, end, (255,0,0), 2)
+            cv2.rectangle(img, start, end, (255,0,0), 1)
 
         cv2.imshow("Image", img)
 

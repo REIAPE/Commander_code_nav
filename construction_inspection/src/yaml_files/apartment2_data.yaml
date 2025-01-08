@@ -1,0 +1,75 @@
+---
+Apartment: Asuinhuoneisto 8
+ApartmentSquare: [
+  [[-1.0, -6.29], [0.9, -1.54]],
+  [[0.85, -6.29], [2.8, -3.24]]]
+WcSquare: [[2.85, -1.04], [0.95, -3.19]]
+...
+---
+Apartment: Varasto
+ApartmentSquare: 
+  [[-3.85, -6.24], [-1.15, -1.54]]
+...
+---
+Apartment: Asuinhuoneisto 7
+ApartmentSquare: [
+  [[-1.05, 1.01], [0.95, 5.61]],
+  [[2.8, 2.66], [0.85, 5.61]]]
+WcSquare: [[1.0, 0.31], [2.8, 2.66]]
+...
+---
+Apartment: Asuinhuoneisto 6
+ApartmentSquare: [
+  [[-5.0, 2.61], [-2.95, 5.56]],
+  [[-3.0, 0.86], [-1.2, 5.56]]]
+WcSquare: [[-5.0, 0.46], [-3.25, 2.61]]
+...
+---
+Apartment: Asuinhuoneisto 5
+ApartmentSquare: [
+  [[-13.05, -6.24], [-10.05, -2.39]],
+  [[-8.15, -3.24], [-10.1, -2.34]],
+  [[-10.25, -4.44], [-8.0, -3.29]]]
+WcSquare: [[-9.85, -6.29], [-7.8, -4.49]]
+...
+---
+Apartment: Asuinhuoneisto 10
+ApartmentSquare: [
+  [[2.95, -6.29], [6.8, -3.24]],
+  [[4.85, -3.19], [6.8, -1.34]]]
+WcSquare: [[3.0, -3.19], [4.8, -0.99]]
+...
+---
+Apartment: Asuinhuoneisto 12
+ApartmentSquare: [
+  [[6.85, -1.39], [9.75, -6.19]],
+  [[9.85, -3.04], [11.65, -1.04]]]
+WcSquare: [[9.8, -6.19], [11.65, -3.09]]
+...
+---
+Apartment: Asuinhuoneisto 11
+ApartmentSquare: [
+  [[6.85, 1.01], [8.85, 5.61]],
+  [[10.95, 2.61], [8.8, 5.56]]]
+WcSquare: [[9.0, 0.41], [10.9, 2.56]]
+...
+---
+Apartment: Asuinhuoneisto 9
+ApartmentSquare: [
+  [[2.9, 2.61], [4.9, 5.61]],
+  [[4.85, 1.01], [6.75, 5.61]]]
+WcSquare: [[2.9, 0.41], [4.75, 2.56]]
+...
+---
+Apartment: Siivouskomero
+ApartmentSquare: 
+  [[-6.35, -6.24], [-4.1, -4.54]]
+...
+---
+Apartment: Hallway
+ApartmentSquare: [
+  [[-4.0, -1.39], [0.8, 0.21]],
+  [[-7.7, -6.29], [-6.45, -4.24]],
+  [[-3.05, 0.21], [0.95, 0.96]],
+  [[4.85, -1.24], [8.9, 0.91]],
+  [[-7.85, -4.34], [-4.05, 0.21]]]
