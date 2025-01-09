@@ -1,0 +1,10 @@
+# Blender 4.1.1 MTL File: 'hard_hat.blend'
+# www.blender.org
+newmtl Material
+# shader_type beckmann
+map_Kd texture.png
+
+# Kd: Diffuse reflectivity.
+Ka 0.0435 0.0435 0.0435
+Kd 1.0 1.0 1.0
+Ks 0.0000 0.0000 0.0000
