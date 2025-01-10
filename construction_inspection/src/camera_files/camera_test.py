@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+
 
 import rclpy
 from rclpy.node import Node 
@@ -6,16 +6,15 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2 
 from ultralytics import YOLO
-
 from nav_msgs.msg import Odometry
-import yaml
-from yaml.loader import SafeLoader
+
 
 from math_code import *
+from open_yaml import *
     
-class SimplePubSub(Node):
+class SimpleSub(Node):
     def __init__(self):
-        super().__init__('simple_pub_sub')
+        super().__init__('camera_and_pose_sub')
         self.yolo = YOLO('yolov8s.pt')
         topic_name= '/camera/image_raw'
 
@@ -32,10 +31,10 @@ class SimplePubSub(Node):
         self.odomsubscription = self.create_subscription(Odometry,'odom', self.odom_callback,10 )
         self.odomsubscription  
 
-        self.data_dict = {}
+        self.data_dict = {} #Here we save detected objects. 
 
-        with open('/home/ap/commander/construction_inspection/src/yaml_files/apartment_data.yaml', 'r') as f:
-            self.yaml_data = list(yaml.load_all(f, Loader=SafeLoader))
+        self.cordinate_list = get_cordinate_list()
+        #self.location = self.check_aparment()
 
     def detection_callback(self, frame):
         results = self.yolo.track(frame, stream=True)
@@ -75,33 +74,25 @@ class SimplePubSub(Node):
             msg.pose.pose.position.x,
             msg.pose.pose.position.y
         )
-    
-    def check_aparment(self):
-    
-        point = self.pose
-        
-        info = f"Location is {self.drone_location},\n"
-        for i in self.yaml_data:
-            Apartment = i["Apartment"]
-            
-            rectangle_center = (i["ApartmentSquare"]["rectangle_center"][0],i["ApartmentSquare"]["rectangle_center"][1])
-            width = i["ApartmentSquare"]["width"]
-            height = i["ApartmentSquare"]["height"]
-            angle = i["ApartmentSquare"]["angle"]
-            if is_point_inside_rotated_rectangle(point, rectangle_center, width, height, angle):
-                house_center = rotate_vector_around_point((rectangle_center[0],rectangle_center[1]+round(height/3,2)),rectangle_center,angle)
-                hallway_center = rotate_vector_around_point((rectangle_center[0],rectangle_center[1]-round(height/3,2)),rectangle_center,angle)
-                if is_point_inside_rotated_rectangle(point, house_center, width, height/3, angle): self.drone_location = Apartment
-                if is_point_inside_rotated_rectangle(point, hallway_center, width, height/3, angle): self.drone_location = "Hallway"
 
-        return info
+
+    def check_aparment(self):
+
+        point = self.pose
+
+        print(point)
+        for apartment in self.cordinate_list:
+            for rectangle in self.cordinate_list[apartment]:
+                if point_inside_rectangle(rectangle,point): self.location = apartment
+        
     
     def save_data(self, names):
         #Save object and location to dict. So we can add location data for object.
+        
         if self.check_aparment() not in self.data_dict:
-            if names not in self.data_dict[self.drone_location]:
-                self.data_dict[self.drone_location] = names
-
+            if names not in self.data_dict[self.location]:
+                self.data_dict[self.location] = names
+        
     def getColours(cls_num):
         base_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
 
@@ -110,6 +101,8 @@ class SimplePubSub(Node):
         if ret == True:
             self.publisher_.publish(self.br.cv2_to_imgmsg(frame))
         self.get_logger().info('Publishing video frame')
+        self.check_aparment()
+        self.get_logger().info(self.location)
 
 
     def img_callback(self, data):
@@ -123,19 +116,19 @@ class SimplePubSub(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    simple_pub_sub = SimplePubSub()
-    SimplePubSub.drone_location = "Hallway"
+    simple_sub = SimpleSub()
+    SimpleSub.location = "Hallway"
     try:
-        rclpy.spin(simple_pub_sub)
+        rclpy.spin(simple_sub)
     except KeyboardInterrupt:
         pass
     finally:
         # Print the final state of data_dict
         print()
-        print(simple_pub_sub.data_dict)
+        print(simple_sub.data_dict)
         
         # Clean up resources
-        simple_pub_sub.destroy_node()
+        simple_sub.destroy_node()
         
   
 if __name__ == '__main__':
