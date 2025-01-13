@@ -5,7 +5,7 @@ from nav2_simple_commander.robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
-from camera_files.read_yaml import *
+from read_yaml import *
 
 def apartments_circulation_order():
     #Tell robot order of apartments to circulate

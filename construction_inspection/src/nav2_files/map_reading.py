@@ -33,12 +33,14 @@ def read_yaml(filepath):
 
     return image_data
 
-def write_cordinates(resolution,origin):
+def write_cordinates(resolution,origin,size):
     if len(rectangles) != 0:
-        f = open("/home/ap/robot_controller/construction_inspection/src/nav2_files/map/cordinates.txt", "w")
+        f = open("/home/ap/robot_controller/construction_inspection/src/nav2_files/map/cordinates2.txt", "w")
+        y_max = size[0]
+        print(y_max)
         for line in rectangles:
-            cor1 = (round(line[1][0]*resolution + origin[0],2), round(line[1][1]*resolution + origin[1],2))
-            cor2 = (round(line[2][0]*resolution + origin[0],2), round(line[2][1]*resolution + origin[1],2))
+            cor1 = (round(line[1][0]*resolution + origin[0],2), round((y_max-line[1][1])*resolution + origin[1],2))
+            cor2 = (round(line[2][0]*resolution + origin[0],2), round((y_max-line[2][1])*resolution + origin[1],2))
             f.write(f'{line[0]} {cor1} {cor2} \n')
         f.close()
 
@@ -95,6 +97,7 @@ def main():
     folder_path = os.path.dirname(filepath)
     imagepath = folder_path + "/" + image_data['image_name']
     image = open_image(imagepath)
+    image_size = image.shape
 
     clone = image.copy()
     cv2.namedWindow("Image")
@@ -124,7 +127,7 @@ def main():
     # Print all finalized rectangles
     print("Finalized rectangles:")
     rectangles.sort()
-    write_cordinates(image_data['resolution'],image_data['origin'])
+    write_cordinates(image_data['resolution'],image_data['origin'], image_size)
     for rect in rectangles:
         name,start, end = rect
         print(f"Name: {name}, Start: {start}, End: {end}")
