@@ -1,5 +1,4 @@
 
-
 import rclpy
 from rclpy.node import Node 
 from sensor_msgs.msg import Image
@@ -15,7 +14,7 @@ from open_yaml import *
 class SimpleSub(Node):
     def __init__(self):
         super().__init__('camera_and_pose_sub')
-        self.yolo = YOLO('yolov8s.pt')
+        self.yolo = YOLO('/home/ap/robot_controller/construction_inspection/src/yolo11n.pt')
         topic_name= '/camera/image_raw'
 
         self.publisher_ = self.create_publisher(Image, topic_name , 10)
@@ -88,11 +87,11 @@ class SimpleSub(Node):
     
     def save_data(self, names):
         #Save object and location to dict. So we can add location data for object.
-        
+        """
         if self.check_aparment() not in self.data_dict:
             if names not in self.data_dict[self.location]:
                 self.data_dict[self.location] = names
-        
+        """
     def getColours(cls_num):
         base_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
 

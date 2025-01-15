@@ -2,7 +2,7 @@ import yaml
 from yaml.loader import SafeLoader
 
 def get_cordinate_list():
-    with open('yaml_files/apartment2_data.yaml', 'r') as f:
+    with open('/home/ap/robot_controller/construction_inspection/src/yaml_files/apartment2_data.yaml', 'r') as f:
        data = list(yaml.load_all(f, Loader=SafeLoader))
     Apartments = {} 
     for i in data:
