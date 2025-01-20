@@ -27,7 +27,7 @@ class RoboflowROS2Detector(Node):
 
         
         # Initialize Roboflow
-        rf = Roboflow(api_key="j1NYSJsR06G2mkXfcsKL")
+        rf = Roboflow(api_key="") #Generated new one
         project = rf.workspace().project("specific-gazebo-models")
         self.model = project.version("3").model
         
